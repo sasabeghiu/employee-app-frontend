@@ -17,7 +17,7 @@
                 <input type="text" v-model="employee.mobile" class="form-control" placeholder="Employee mobile">
             </div>
 
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary saveBtn">Save</button>
         </form>
 
         <h2>Employee View</h2>
@@ -124,3 +124,14 @@ export default {
     }
 }
 </script>
+
+<style>
+button {
+    margin-right: 10px;
+}
+
+.saveBtn {
+    width: 100px;
+    margin-left: 500px;
+}
+</style>
