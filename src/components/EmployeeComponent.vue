@@ -1,137 +1,91 @@
 <template>
     <div>
         <h2>Employee Registration</h2>
-        <form @submit.prevent="save">
-            <div class="form-group">
-                <label>Employee name: </label>
-                <input type="text" v-model="employee.name" class="form-control" placeholder="Employee name">
-            </div>
-
-            <div class="form-group">
-                <label>Employee email: </label>
-                <input type="text" v-model="employee.email" class="form-control" placeholder="Employee email">
-            </div>
-
-            <div class="form-group">
-                <label>Mobile number: </label>
-                <input type="text" v-model="employee.mobile" class="form-control" placeholder="Employee mobile">
-            </div>
-
-            <button type="submit" class="btn btn-primary saveBtn">Save</button>
-        </form>
+        <EmployeeForm :employee="employee" :actionLabel="actionLabel" @save="saveEmployee" @update="updateEmployee">
+        </EmployeeForm>
 
         <h2>Employee View</h2>
-        <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Employee Name</th>
-                    <th scope="col">Employee Email</th>
-                    <th scope="col">Employee Mobile</th>
-                    <th scope="col">Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="employee in result" v-bind:key="employee.id">
-                    <td>{{ employee.id }}</td>
-                    <td>{{ employee.name }}</td>
-                    <td>{{ employee.email }}</td>
-                    <td>{{ employee.mobile }}</td>
-                    <td>
-                        <button type="button" class="btn btn-warning" @click="edit(employee)">Edit</button>
-                        <button type="button" class="btn btn-danger" @click="remove(employee)">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <EmployeeTable :employees="result" @edit="editEmployee" @delete="deleteEmployee"></EmployeeTable>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import EmployeeForm from './EmployeeForm.vue';
+import EmployeeTable from './EmployeeTable.vue';
 
 export default {
     name: 'EmployeeComponent',
+    components: {
+        EmployeeForm,
+        EmployeeTable,
+    },
     data() {
         return {
-            result: {},
+            result: [],
             employee: {
                 id: '',
                 name: '',
                 email: '',
                 mobile: ''
-            }
-        }
+            },
+        };
+    },
+    computed: {
+        actionLabel() {
+            return this.employee.id ? "Update" : "Save";
+        },
     },
     created() {
-        this.EmployeeLoad();
-    },
-    mounted() {
-        console.log("mounted() called...");
+        this.loadEmployees();
     },
     methods: {
-        EmployeeLoad() {
+        loadEmployees() {
             var url = 'http://localhost:8000/api/employees';
             axios.get(url)
-                .then(
-                    ({ data }) => {
-                        console.log(data);
-                        this.result = data;
-                    }
-                );
+                .then(({ data }) => {
+                    console.log(data);
+                    this.result = data;
+                });
         },
-        save() {
-            if (this.employee.id == '') {
-                this.saveData();
-            } else {
-                this.updateData();
-            }
-        },
-        saveData() {
-            axios.post('http://localhost:8000/api/employees', this.employee)
+        saveEmployee(employee) {
+            axios.post('http://localhost:8000/api/employees', employee)
                 .then(() => {
                     alert("Employee saved successfully");
-                    this.EmployeeLoad();
-                    this.employee.name = '';
-                    this.employee.email = '';
-                    this.employee.mobile = '';
-                    this.id = '';
-                }
-                )
+                    this.loadEmployees();
+                    employee.name = '';
+                    employee.email = '';
+                    employee.mobile = '';
+                    employee.id = '';
+                });
         },
-        edit(employee) {
-            this.employee = employee;
+        editEmployee(employee) {
+            this.employee = { ...employee };
         },
-        updateData() {
-            var editUrl = 'http://localhost:8000/api/employees/' + this.employee.id;
-            axios.put(editUrl, this.employee)
+        updateEmployee(employee) {
+            var editUrl = 'http://localhost:8000/api/employees/' + employee.id;
+            axios.put(editUrl, employee)
                 .then(() => {
-                    this.employee.name = '';
-                    this.employee.email = '';
-                    this.employee.mobile = '';
-                    this.id = '';
+                    employee.name = '';
+                    employee.email = '';
+                    employee.mobile = '';
+                    employee.id = '';
                     alert("Employee updated successfully");
-                    this.EmployeeLoad();
-                }
-                );
+                    this.loadEmployees();
+                });
         },
-        remove(employee) {
+        deleteEmployee(employee) {
             var deleteUrl = 'http://localhost:8000/api/employees/' + employee.id;
             axios.delete(deleteUrl);
             alert("Employee deleted successfully");
-            this.EmployeeLoad();
-        }
-    }
-}
+            this.loadEmployees();
+        },
+    },
+};
 </script>
 
 <style>
-button {
-    margin-right: 10px;
-}
-
-.saveBtn {
-    width: 100px;
-    margin-left: 500px;
+h2 {
+    text-align: center;
 }
 </style>
