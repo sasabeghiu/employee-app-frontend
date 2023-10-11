@@ -15,7 +15,9 @@
             <input type="text" v-model="employeeCopy.mobile" class="form-control" placeholder="Employee mobile">
         </div>
 
-        <button type="submit" class="btn btn-primary saveBtn">{{ actionLabel }}</button>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary saveBtn">{{ actionLabel }}</button>
+        </div>
     </form>
 </template>
 
@@ -51,8 +53,12 @@ export default {
 </script>
 
 <style>
-.saveBtn {
+/* .saveBtn {
     width: 200px;
-    margin-left: 450px;
+    margin: 10px 0 10px 550px;
+} */
+
+.form-control {
+    margin-bottom: 10px;
 }
 </style>

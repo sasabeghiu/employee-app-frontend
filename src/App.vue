@@ -1,15 +1,20 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
-  <nav>
-    <RouterLink to="/">Employees</RouterLink>
-  </nav>
+  <TheNavigation></TheNavigation>
   <div class="container">
     <RouterView />
   </div>
 </template>
+
+<script>
+import TheNavigation from './components/TheNavigation.vue';
+
+export default {
+  name: 'App',
+  components: {
+    TheNavigation,
+  },
+};
+</script>
 
 <style>
 .container {

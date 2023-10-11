@@ -11,8 +11,8 @@
 
 <script>
 import axios from 'axios';
-import EmployeeForm from './EmployeeForm.vue';
-import EmployeeTable from './EmployeeTable.vue';
+import EmployeeForm from '../components/EmployeeForm.vue';
+import EmployeeTable from '../components/EmployeeTable.vue';
 
 export default {
     name: 'EmployeeComponent',
